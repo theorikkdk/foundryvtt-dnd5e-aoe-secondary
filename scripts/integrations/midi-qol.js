@@ -1,4 +1,5 @@
 import { MODULE_ID } from "../constants.js";
+import { logger } from "../utils/log.js";
 import { getItemSecondaryAoeConfig } from "../utils/flags.js";
 import { buildSecondaryAoeExecutionPlan } from "../services/secondary-aoe-plan-service.js";
 import { executeSecondaryAoePlan } from "../services/secondary-aoe-execution-service.js";
@@ -208,6 +209,7 @@ function evaluateTriggerCondition({ workflow, trigger, primaryTargetToken }) {
 
 async function processMidiWorkflow(workflow, hookName) {
   if (isSecondaryExecutionWorkflow(workflow)) {
+    logger.debug("Midi-QOL workflow ignored because it is marked as a secondary execution.");
     return true;
   }
 
@@ -226,6 +228,27 @@ async function processMidiWorkflow(workflow, hookName) {
   }
 
   const sourceToken = getWorkflowSourceToken(workflow);
+  if (!sourceToken) {
+    const result = {
+      executed: false,
+      reason: "No source token was found in the Midi-QOL workflow.",
+      attemptedTargetCount: 0,
+      primaryActivityId: String(workflow?.activity?.id ?? workflow?.activity?._id ?? ""),
+      secondaryActivityId: String(config.secondaryActivityId ?? ""),
+      usedActivityId: "",
+      consumptionSuppressed: false,
+      targetNames: [],
+      resultSummary: {
+        hook: hookName,
+        trigger: config.trigger
+      }
+    };
+
+    storeLastMidiSecondaryAoeExecutionResult(result);
+    logger.warn(`Midi-QOL ignored: ${result.reason}`, result);
+    return true;
+  }
+
   const primaryTargetToken = getWorkflowPrimaryTargetToken(workflow, config.trigger);
   if (!primaryTargetToken) {
     const skippedPlan = {
@@ -263,13 +286,13 @@ async function processMidiWorkflow(workflow, hookName) {
         trigger: config.trigger
       }
     });
-    console.warn(`[AoE Secondary] Midi-QOL ignored: ${skippedPlan.reason}`, skippedPlan);
+    logger.warn(`Midi-QOL ignored: ${skippedPlan.reason}`, skippedPlan);
     return true;
   }
 
   const triggerEvaluation = evaluateTriggerCondition({ workflow, trigger: config.trigger, primaryTargetToken });
   if (!triggerEvaluation.shouldExecute) {
-    console.log(`[AoE Secondary] Midi-QOL ignored: ${triggerEvaluation.reason}`);
+    logger.debug(`Midi-QOL ignored: ${triggerEvaluation.reason}`);
     storeLastMidiSecondaryAoeExecutionResult({
       executed: false,
       reason: triggerEvaluation.reason,
@@ -310,7 +333,7 @@ async function processMidiWorkflow(workflow, hookName) {
   storeLastMidiSecondaryAoePlan(storedPlan);
 
   if (!storedPlan.ready) {
-    console.warn(`[AoE Secondary] Midi-QOL plan not ready: ${storedPlan.reason}`, storedPlan);
+    logger.warn(`Midi-QOL plan not ready: ${storedPlan.reason}`, storedPlan);
     storeLastMidiSecondaryAoeExecutionResult({
       executed: false,
       reason: storedPlan.reason,
@@ -342,9 +365,9 @@ async function processMidiWorkflow(workflow, hookName) {
   storeLastMidiSecondaryAoeExecutionResult(storedExecutionResult);
 
   if (storedExecutionResult.executed) {
-    console.log(`[AoE Secondary] Midi-QOL secondary activity executed: ${triggerEvaluation.reason}`, storedExecutionResult);
+    logger.debug(`Midi-QOL secondary activity executed: ${triggerEvaluation.reason}`, storedExecutionResult);
   } else {
-    console.warn(`[AoE Secondary] Midi-QOL secondary activity not executed: ${storedExecutionResult.reason}`, storedExecutionResult);
+    logger.warn(`Midi-QOL secondary activity not executed: ${storedExecutionResult.reason}`, storedExecutionResult);
   }
 
   return true;
@@ -366,7 +389,7 @@ function registerMidiQolIntegration() {
   Hooks.on(MIDI_QOL_HOOKS.ATTACK_COMPLETE, handleMidiQolAttackRollComplete);
   Hooks.on(MIDI_QOL_HOOKS.ROLL_COMPLETE, handleMidiQolRollComplete);
   midiQolHooksRegistered = true;
-  console.log(`[AoE Secondary] Midi-QOL integration active on ${MIDI_QOL_HOOKS.ATTACK_COMPLETE} and ${MIDI_QOL_HOOKS.ROLL_COMPLETE}.`);
+  logger.debug(`Midi-QOL integration active on ${MIDI_QOL_HOOKS.ATTACK_COMPLETE} and ${MIDI_QOL_HOOKS.ROLL_COMPLETE}.`);
 }
 
 export {

@@ -43,6 +43,15 @@
   background: rgba(0, 0, 0, 0.03);
 }
 
+.foundryvtt-dnd5e-aoe-secondary-config-window .sheet-footer {
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .automation-profile-button {
+  margin-right: auto;
+}
+
 .foundryvtt-dnd5e-aoe-secondary-open-button {
   justify-content: center;
   min-width: 28px;

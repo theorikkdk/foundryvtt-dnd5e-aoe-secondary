@@ -2,6 +2,7 @@ import {
   MODULE_ID,
   SECONDARY_AOE_DEFAULTS
 } from "./constants.js";
+import { registerSettings } from "./settings.js";
 import {
   clearItemSecondaryAoeConfig,
   getItemSecondaryAoeConfig,
@@ -38,18 +39,25 @@ import {
   resolveSecondaryActivity
 } from "./services/secondary-activity-service.js";
 import {
+  applySecondaryAoeAutomationProfile,
+  getSecondaryAoeAutomationProfileStatus,
+  previewSecondaryAoeAutomationProfile
+} from "./services/activity-automation-profile-service.js";
+import {
   closeSecondaryAoeConfig,
   getOpenSecondaryAoeConfigItem,
   openSecondaryAoeConfig
 } from "./ui/secondary-aoe-config-app.js";
 import { registerItemSheetHeaderButton } from "./ui/item-sheet-header-button.js";
+import { logger } from "./utils/log.js";
 
 Hooks.once("init", () => {
-  console.log("[AoE Secondary] module charge");
-
+  registerSettings();
   registerItemSheetHeaderButton();
+  logger.debug("module charge");
 
   game.modules.get(MODULE_ID).api = {
+    applySecondaryAoeAutomationProfile,
     buildSecondaryAoeExecutionPlan,
     clearItemSecondaryAoeConfig,
     clearLastMidiSecondaryAoeExecutionResult,
@@ -64,6 +72,7 @@ Hooks.once("init", () => {
     getLastMidiSecondaryAoeExecutionResult,
     getLastMidiSecondaryAoePlan,
     getOpenSecondaryAoeConfigItem,
+    getSecondaryAoeAutomationProfileStatus,
     getSecondaryAoeCandidatesForConfig,
     getSecondaryAoeTargetTokens,
     getTokenOccupiedGridSpaces,
@@ -72,6 +81,7 @@ Hooks.once("init", () => {
     listItemActivities,
     normalizeSecondaryAoeConfig: mergeSecondaryAoeConfig,
     openSecondaryAoeConfig,
+    previewSecondaryAoeAutomationProfile,
     resolveSecondaryActivity,
     resolveSecondaryAoeConfig,
     resolveSecondaryAoeTargets,

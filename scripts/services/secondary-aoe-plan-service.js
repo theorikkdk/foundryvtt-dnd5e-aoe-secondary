@@ -21,17 +21,6 @@ function summarizePlanToken(token) {
   };
 }
 
-/**
- * Build a non-executing plan for the secondary AoE workflow.
- * This combines validated config, resolved activities and retained secondary targets.
- *
- * @param {object} params
- * @param {Token|TokenDocument|object} params.sourceToken
- * @param {Token|TokenDocument|object} params.primaryTargetToken
- * @param {Item|null|undefined} params.item
- * @param {object} [params.primaryActivity]
- * @returns {object}
- */
 function buildSecondaryAoeExecutionPlan({ sourceToken, primaryTargetToken, item, primaryActivity } = {}) {
   if (!item) {
     return {
@@ -39,6 +28,42 @@ function buildSecondaryAoeExecutionPlan({ sourceToken, primaryTargetToken, item,
       reason: "Item is required.",
       config: null,
       primaryTarget: summarizePlanToken(primaryTargetToken),
+      secondaryTargets: [],
+      secondaryTargetCount: 0,
+      primaryActivityId: "",
+      primaryActivity: null,
+      primaryActivitySummary: null,
+      secondaryActivityId: "",
+      secondaryActivity: null,
+      secondaryActivitySummary: null,
+      debug: null
+    };
+  }
+
+  if (!sourceToken) {
+    return {
+      ready: false,
+      reason: "Source token is required.",
+      config: resolveSecondaryAoeConfig({ item }),
+      primaryTarget: summarizePlanToken(primaryTargetToken),
+      secondaryTargets: [],
+      secondaryTargetCount: 0,
+      primaryActivityId: "",
+      primaryActivity: null,
+      primaryActivitySummary: null,
+      secondaryActivityId: "",
+      secondaryActivity: null,
+      secondaryActivitySummary: null,
+      debug: null
+    };
+  }
+
+  if (!primaryTargetToken) {
+    return {
+      ready: false,
+      reason: "Primary target token is required.",
+      config: resolveSecondaryAoeConfig({ item }),
+      primaryTarget: null,
       secondaryTargets: [],
       secondaryTargetCount: 0,
       primaryActivityId: "",

@@ -142,6 +142,20 @@ async function executeSecondaryAoePlan({ plan } = {}) {
     };
   }
 
+  if (!plan.primaryTarget) {
+    return {
+      ...baseResult,
+      reason: "No primary target is available on the plan."
+    };
+  }
+
+  if (!plan.secondaryActivityId) {
+    return {
+      ...baseResult,
+      reason: "No secondary activity id is available on the plan."
+    };
+  }
+
   if (!plan.secondaryActivity) {
     return {
       ...baseResult,

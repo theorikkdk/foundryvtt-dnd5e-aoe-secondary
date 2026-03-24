@@ -5,6 +5,8 @@ import {
   setItemSecondaryAoeConfig
 } from "../utils/flags.js";
 import { listItemActivities } from "../services/secondary-activity-service.js";
+import { applySecondaryAoeAutomationProfile } from "../services/activity-automation-profile-service.js";
+import { logger } from "../utils/log.js";
 
 const APP_TEMPLATE = `modules/${MODULE_ID}/templates/apps/secondary-aoe-config-app.hbs`;
 
@@ -131,14 +133,65 @@ class SecondaryAoeConfigApp extends FormApplication {
       event.preventDefault();
       this.close();
     });
+
+    html.find('[data-action="apply-automation-profile"]').on("click", this.#onApplyAutomationProfile.bind(this));
+  }
+
+  async _saveConfigData(formData, { notify = false, closeOnSuccess = false } = {}) {
+    const submitData = formData ?? this._getSubmitData();
+    const expanded = foundry.utils.expandObject(submitData);
+    const config = expanded.flags?.[MODULE_ID]?.secondaryAoe ?? {};
+
+    await setItemSecondaryAoeConfig(this.item, config);
+
+    if (notify) {
+      ui.notifications?.info(game.i18n.localize("AOESECONDARY.APP.Saved"));
+    }
+
+    if (closeOnSuccess) {
+      await this.close();
+    }
+
+    return config;
+  }
+
+  async #onApplyAutomationProfile(event) {
+    event.preventDefault();
+
+    const button = event.currentTarget;
+    if (button) {
+      button.disabled = true;
+    }
+
+    try {
+      await this._saveConfigData(undefined, { notify: false, closeOnSuccess: false });
+      const result = await applySecondaryAoeAutomationProfile(this.item);
+
+      if (result.status === "success") {
+        ui.notifications?.info(game.i18n.localize("AOESECONDARY.APP.AutomationProfileAppliedSuccess"));
+      } else if (result.status === "partial") {
+        ui.notifications?.warn(game.i18n.format("AOESECONDARY.APP.AutomationProfileAppliedPartial", {
+          reason: result.reason || game.i18n.localize("AOESECONDARY.APP.AutomationProfilePartialFallback")
+        }));
+      } else {
+        ui.notifications?.error(game.i18n.format("AOESECONDARY.APP.AutomationProfileAppliedFailed", {
+          reason: result.reason || game.i18n.localize("AOESECONDARY.APP.AutomationProfileFailedFallback")
+        }));
+      }
+
+      this.render(false);
+    } catch (error) {
+      logger.error("Automation profile application failed from the AoE config window.", error);
+      ui.notifications?.error(game.i18n.localize("AOESECONDARY.APP.AutomationProfileApplyError"));
+    } finally {
+      if (button) {
+        button.disabled = false;
+      }
+    }
   }
 
   async _updateObject(event, formData) {
-    const expanded = foundry.utils.expandObject(formData);
-    const config = expanded.flags?.[MODULE_ID]?.secondaryAoe ?? {};
-    await setItemSecondaryAoeConfig(this.item, config);
-    ui.notifications?.info(game.i18n.localize("AOESECONDARY.APP.Saved"));
-    await this.close();
+    await this._saveConfigData(formData, { notify: true, closeOnSuccess: true });
   }
 
   async close(options = {}) {
