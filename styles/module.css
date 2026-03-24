@@ -1,5 +1,62 @@
 /*
- * Base stylesheet for the module.
- * Intentionally minimal until UI work starts.
+ * Standalone AoE secondary config window styling.
  */
 
+.secondary-aoe-config-app .window-content {
+  padding: 0.75rem;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window {
+  gap: 0.85rem;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .aoe-config-header h2 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .aoe-config-header .notes {
+  margin: 0;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .aoe-config-body {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .form-group {
+  margin: 0;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .aoe-config-readonly {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.foundryvtt-dnd5e-aoe-secondary-config-window .readonly-value {
+  min-height: 32px;
+  align-items: center;
+  padding: 0.35rem 0.5rem;
+  border: 1px dashed rgba(0, 0, 0, 0.18);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.foundryvtt-dnd5e-aoe-secondary-open-button {
+  justify-content: center;
+  min-width: 28px;
+  padding-inline: 0.35rem;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-open-button i {
+  margin: 0;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-open-button.is-enabled i {
+  color: #4ea96a;
+}
+
+.foundryvtt-dnd5e-aoe-secondary-open-button.is-disabled i {
+  color: #f5f5f5;
+}
