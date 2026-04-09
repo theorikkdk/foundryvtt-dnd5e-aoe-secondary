@@ -1,114 +1,75 @@
-# foundryvtt-dnd5e-aoe-secondary
+# D&D5e Secondary AoE
 
-Module Foundry VTT v13 pour le systeme dnd5e, pense pour ajouter a terme une gestion d'AoE secondaire sur une arme, un sort ou une capacite.
+Configurable secondary AoE for D&D5e items with Midi-QOL.
 
-L'objectif de cette premiere version est volontairement simple :
-- fournir un squelette de module propre
-- charger correctement dans Foundry VTT
-- preparer une base claire pour les futures integrations
-- garder le code lisible, testable et facile a faire evoluer
+AoE secondaire configurable pour les items D&D5e avec Midi-QOL.
 
-## Etat actuel
+## English
 
-La logique metier AoE secondaire reste disponible et testable.
-Les services, flags, triggers et l'integration Midi-QOL sont conserves.
+Adds a configurable secondary AoE activity to D&D5e items. The module integrates with complete Midi-QOL workflows to automatically apply a secondary activity around the primary target.
 
-L'UI dans la fiche d'item `dnd5e` reste retiree des onglets et panneaux natifs.
-Un bouton discret dans le header de la fiche permet d'ouvrir la fenetre AoE secondaire separee.
+### General Principle
 
-## Mode debug
+- The primary `dnd5e` item flow stays in place.
+- A separate Secondary AoE configuration defines the radius, trigger, target filter, and linked secondary activity.
+- Automatic execution is designed for complete Midi-QOL workflows rather than chat-card-only usage.
 
-Le module propose un reglage simple : `Activer le mode debug AoE secondaire`.
+### Midi-QOL Prerequisites
 
-Usage normal :
-- seuls les warnings utiles et les erreurs importantes apparaissent en console
-- les logs detailles restent silencieux
+- `socketlib` is required by the module.
+- `midi-qol` is strongly recommended for automatic triggering.
+- Player-side Midi-QOL must run a complete workflow that reaches the supported completion hooks.
 
-Mode debug active :
-- les logs detailles du module sont affiches dans la console Foundry
-- utile pour suivre le branchement Midi-QOL, les triggers ignores et les resolutions internes
+### Open the AoE Configuration
 
-## Prerequis Midi-QOL cote joueur
+1. Open a `dnd5e` item sheet.
+2. Click `Secondary AoE` in the sheet header.
+3. Edit the configuration in the dedicated window and save.
 
-Le declenchement automatique de l'AoE secondaire depend d'un vrai workflow Midi-QOL complet.
+### Current MVP Limits
 
-En pratique, le cast joueur doit aller jusqu'aux hooks Midi-QOL comme `AttackRollComplete` ou `RollComplete`.
-Si la configuration Midi-QOL du joueur est trop manuelle et ne produit qu'une simple carte de chat sans jets automatiques, l'AoE secondaire ne se declenchera pas.
+- The current MVP uses creature-based selection around the target.
+- The current MVP uses center-to-center distance measurement.
+- Automatic triggering depends on a complete Midi-QOL workflow.
+- This publication-preparation pass does not change the AoE engine, triggers, GM/PJ support, functional UI, or current socket architecture.
 
-Points a verifier cote joueur :
-- Midi-QOL doit etre actif sur le client
-- le cast doit lancer un workflow complet, pas seulement afficher une carte de chat
-- les jets/etapes automatiques doivent aller assez loin pour atteindre les hooks de fin de workflow utilises par ce module
+### Before Foundry Publication
 
-Si un cast PJ n'active pas l'AoE secondaire alors que le meme item fonctionne cote GM, la configuration Midi-QOL du joueur est un premier point de controle prioritaire.
+- Add the public `manifest` URL to `module.json`.
+- Add the public `download` URL to `module.json`.
+- Create the GitHub release archive that will be used by the `download` URL.
 
-## Ouvrir la configuration AoE depuis la fiche d'item
+## Francais
+
+Ajoute une activite d'AoE secondaire configurable aux items D&D5e. Le module s'integre aux workflows complets de Midi-QOL pour appliquer automatiquement une activite secondaire autour de la cible principale.
+
+### Principe General
+
+- Le flux principal de l'item `dnd5e` reste en place.
+- Une configuration AoE secondaire separee definit le rayon, le declenchement, le filtre de cibles et l'activite secondaire liee.
+- Le declenchement automatique est pense pour les workflows complets de Midi-QOL, pas pour une simple carte de chat.
+
+### Prerequis Midi-QOL
+
+- `socketlib` est requis par le module.
+- `midi-qol` est fortement recommande pour le declenchement automatique.
+- Cote joueur, Midi-QOL doit executer un workflow complet jusqu'aux hooks de fin supportes.
+
+### Ouvrir La Configuration AoE
 
 1. Ouvre une fiche d'item `dnd5e`.
-2. Clique sur le bouton `AoE secondaire` dans le header de la fenetre.
-3. La fenetre de configuration AoE secondaire s'ouvre sans modifier les onglets natifs.
+2. Clique sur `AoE secondaire` dans le header de la fiche.
+3. Modifie la configuration dans la fenetre dediee puis enregistre.
 
-## Ouvrir la configuration AoE depuis la console
+### Limites Actuelles Du MVP
 
-Exemple minimal :
+- Le MVP actuel utilise une selection autour de la creature cible.
+- Le MVP actuel utilise une mesure centre a centre.
+- Le declenchement automatique depend d'un workflow Midi-QOL complet.
+- Cette passe de preparation publication ne modifie ni le moteur AoE, ni les triggers, ni le support GM/PJ, ni l'UI fonctionnelle, ni l'architecture socket actuelle.
 
-```js
-const api = game.modules.get("foundryvtt-dnd5e-aoe-secondary").api;
-const actor = game.actors.getName("Nom de l'acteur");
-const item = actor.items.getName("Nom de l'objet");
-api.openSecondaryAoeConfig(item);
-```
+### Avant Publication Foundry
 
-Fermer la fenetre :
-
-```js
-game.modules.get("foundryvtt-dnd5e-aoe-secondary").api.closeSecondaryAoeConfig();
-```
-
-Recuperer l'item actuellement edite :
-
-```js
-game.modules.get("foundryvtt-dnd5e-aoe-secondary").api.getOpenSecondaryAoeConfigItem();
-```
-
-## Profil automation AoE
-
-Le module peut maintenant appliquer un profil de reglages prudent sur l'activite primaire et l'activite secondaire d'un item.
-L'objectif est de reserver l'activite secondaire a l'automation AoE et de couper les chainages automatiques dangereux au niveau des activities.
-
-Reglages vises :
-- activite primaire : `Use Other Activity = off`, `Trigger Activity = none`, `Override action type = false`
-- activite secondaire : `Automation Only = true`, `Use Other Activity = off`, `Trigger Activity = none`, `Override action type = false`, `Other Activity Compatible = false`
-
-Depuis la fenetre AoE secondaire :
-1. Ouvre la fenetre AoE sur un item.
-2. Choisis l'activite secondaire et enregistre si besoin.
-3. Clique sur `Appliquer reglages automation AoE`.
-4. Le module sauvegarde d'abord la config AoE en cours, puis tente d'appliquer le profil sur les activities.
-5. Une notification indique un resultat `succes`, `partiel` ou `echec`.
-
-Depuis la console :
-
-```js
-const api = game.modules.get("foundryvtt-dnd5e-aoe-secondary").api;
-const actor = game.actors.getName("Nom de l'acteur");
-const item = actor.items.getName("Nom de l'objet");
-api.previewSecondaryAoeAutomationProfile(item);
-await api.applySecondaryAoeAutomationProfile(item);
-```
-
-Le patch est volontairement defensif :
-- si une propriete n'existe pas sur un type d'activity, le module ne plante pas
-- le resultat indique ce qui a ete applique ou non
-- aucun rollback automatique n'est tente pour l'instant
-
-## Verification rapide
-
-1. Recharge Foundry.
-2. Ouvre une fiche d'item `dnd5e` et verifie que les onglets natifs fonctionnent normalement.
-3. Clique sur `AoE secondaire` dans le header de la fiche.
-4. Verifie que la fenetre AoE s'ouvre.
-5. Configure une activite secondaire, puis clique sur `Appliquer reglages automation AoE`.
-6. Verifie la notification de resultat, puis controle l'item et ses activities.
-7. Active ou desactive ensuite le mode debug dans les parametres du module si tu veux plus de details en console.
-8. Teste un item sans activities pour verifier que la fenetre s'ouvre quand meme avec le message `Aucune activite disponible`.
+- Ajouter l'URL publique du `manifest` dans `module.json`.
+- Ajouter l'URL publique du `download` dans `module.json`.
+- Creer l'archive de release GitHub qui sera referencee par l'URL `download`.

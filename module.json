@@ -1,13 +1,19 @@
 {
   "id": "foundryvtt-dnd5e-aoe-secondary",
-  "title": "dnd5e AoE Secondary",
-  "description": "Skeleton module for secondary area-of-effect workflows in dnd5e with future Midi-QOL integration.",
-  "version": "0.1.0",
+  "title": "D&D5e Secondary AoE",
+  "description": "Adds a configurable secondary AoE activity to D&D5e items. The module integrates with complete Midi-QOL workflows to automatically apply a secondary activity around the primary target.",
+  "version": "0.1.1",
   "authors": [
     {
-      "name": "Codex"
+      "name": "theorikkdk",
+      "url": "https://github.com/theorikkdk"
     }
   ],
+  "url": "https://github.com/theorikkdk/foundryvtt-dnd5e-aoe-secondary",
+  "bugs": "https://github.com/theorikkdk/foundryvtt-dnd5e-aoe-secondary/issues",
+  "license": "LICENSE",
+  "changelog": "CHANGELOG.md",
+  "readme": "README.md",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
@@ -48,7 +54,11 @@
       "lang": "fr",
       "name": "Francais",
       "path": "lang/fr.json"
+    },
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
     }
-  ],
-  "manifest": "module.json"
+  ]
 }
