@@ -28,6 +28,20 @@ Mode debug active :
 - les logs detailles du module sont affiches dans la console Foundry
 - utile pour suivre le branchement Midi-QOL, les triggers ignores et les resolutions internes
 
+## Prerequis Midi-QOL cote joueur
+
+Le declenchement automatique de l'AoE secondaire depend d'un vrai workflow Midi-QOL complet.
+
+En pratique, le cast joueur doit aller jusqu'aux hooks Midi-QOL comme `AttackRollComplete` ou `RollComplete`.
+Si la configuration Midi-QOL du joueur est trop manuelle et ne produit qu'une simple carte de chat sans jets automatiques, l'AoE secondaire ne se declenchera pas.
+
+Points a verifier cote joueur :
+- Midi-QOL doit etre actif sur le client
+- le cast doit lancer un workflow complet, pas seulement afficher une carte de chat
+- les jets/etapes automatiques doivent aller assez loin pour atteindre les hooks de fin de workflow utilises par ce module
+
+Si un cast PJ n'active pas l'AoE secondaire alors que le meme item fonctionne cote GM, la configuration Midi-QOL du joueur est un premier point de controle prioritaire.
+
 ## Ouvrir la configuration AoE depuis la fiche d'item
 
 1. Ouvre une fiche d'item `dnd5e`.

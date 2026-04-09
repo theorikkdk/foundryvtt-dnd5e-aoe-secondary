@@ -40,6 +40,8 @@
   "AOESECONDARY.UI.SelectionModeHint": "Le MVP utilise actuellement un mode de selection autour de la creature.",
   "AOESECONDARY.UI.DistanceModeLabel": "Mode de distance",
   "AOESECONDARY.UI.DistanceModeHint": "Le MVP utilise actuellement une distance centre a centre.",
+  "AOESECONDARY.UI.MidiWorkflowReminder": "Le declenchement automatique depend d'un workflow Midi-QOL complet cote utilisateur.",
+  "AOESECONDARY.UI.MidiWorkflowReminderTooltip": "Si le joueur ne produit qu'une carte de chat sans workflow Midi-QOL complet, l'AoE secondaire ne se declenchera pas.",
   "AOESECONDARY.Trigger.always": "Toujours",
   "AOESECONDARY.Trigger.onHit": "Si touche",
   "AOESECONDARY.Trigger.onFailedSave": "Si jet de sauvegarde rate",

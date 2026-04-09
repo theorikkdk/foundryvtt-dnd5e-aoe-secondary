@@ -23,7 +23,12 @@
         }
       }
     ],
-    "requires": [],
+    "requires": [
+      {
+        "id": "socketlib",
+        "type": "module"
+      }
+    ],
     "recommends": [
       {
         "id": "midi-qol",
@@ -34,6 +39,7 @@
   "esmodules": [
     "scripts/main.js"
   ],
+  "socket": true,
   "styles": [
     "styles/module.css"
   ],

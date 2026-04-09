@@ -127,6 +127,22 @@ function listItemActivities({ item } = {}) {
   return normalizeItemActivities(item).map((activity) => summarizeItemActivity(activity));
 }
 
+function getItemActivityById({ item, activityId } = {}) {
+  if (!item) {
+    return null;
+  }
+
+  const normalizedId = String(activityId ?? "");
+  if (!normalizedId) {
+    return null;
+  }
+
+  return normalizeItemActivities(item).find((activity) => {
+    const entryId = String(activity?.id ?? activity?._id ?? activity?.activityId ?? "");
+    return entryId === normalizedId;
+  }) ?? null;
+}
+
 /**
  * Resolve the primary activity for an item.
  * By default this is the first normalized activity, unless a specific activity is provided.
@@ -232,6 +248,7 @@ function resolveSecondaryActivity({ item, secondaryActivityId } = {}) {
 
 export {
   inspectItemActivities,
+  getItemActivityById,
   listItemActivities,
   normalizeActivityContainer,
   normalizeItemActivities,

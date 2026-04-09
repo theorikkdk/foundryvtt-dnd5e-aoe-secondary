@@ -27,6 +27,8 @@ import {
   clearLastMidiSecondaryAoePlan,
   getLastMidiSecondaryAoeExecutionResult,
   getLastMidiSecondaryAoePlan,
+  getMidiHookDebugStatus,
+  registerSocketlibIntegration,
   registerMidiQolIntegration
 } from "./integrations/midi-qol.js";
 import {
@@ -64,6 +66,7 @@ Hooks.once("init", () => {
     clearLastMidiSecondaryAoePlan,
     closeSecondaryAoeConfig,
     defaults: SECONDARY_AOE_DEFAULTS,
+    debugMidiHookStatus: getMidiHookDebugStatus,
     executeLastMidiSecondaryAoePlan,
     executeSecondaryAoePlan,
     getCandidateGridSpacesAroundPoint,
@@ -90,6 +93,7 @@ Hooks.once("init", () => {
 });
 
 Hooks.once("ready", () => {
+  registerSocketlibIntegration();
   registerMidiQolIntegration();
 });
 
