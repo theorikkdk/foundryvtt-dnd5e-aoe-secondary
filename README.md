@@ -33,11 +33,6 @@ Adds a configurable secondary AoE activity to D&D5e items. The module integrates
 - Automatic triggering depends on a complete Midi-QOL workflow.
 - This publication-preparation pass does not change the AoE engine, triggers, GM/PJ support, functional UI, or current socket architecture.
 
-### Before Foundry Publication
-
-- Add the public `manifest` URL to `module.json`.
-- Add the public `download` URL to `module.json`.
-- Create the GitHub release archive that will be used by the `download` URL.
 
 ## Francais
 
@@ -67,9 +62,3 @@ Ajoute une activite d'AoE secondaire configurable aux items D&D5e. Le module s'i
 - Le MVP actuel utilise une mesure centre a centre.
 - Le declenchement automatique depend d'un workflow Midi-QOL complet.
 - Cette passe de preparation publication ne modifie ni le moteur AoE, ni les triggers, ni le support GM/PJ, ni l'UI fonctionnelle, ni l'architecture socket actuelle.
-
-### Avant Publication Foundry
-
-- Ajouter l'URL publique du `manifest` dans `module.json`.
-- Ajouter l'URL publique du `download` dans `module.json`.
-- Creer l'archive de release GitHub qui sera referencee par l'URL `download`.
